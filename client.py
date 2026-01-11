@@ -12,6 +12,7 @@ my_id = my_data[0]
 my_player = my_data[1:]
 sock.setblocking(False)
 
+
 init()
 window = display.set_mode((1000, 1000))
 clock = time.Clock()
