@@ -6,7 +6,7 @@ from random import randint
 
 # ================== NETWORK ==================
 sock = socket(AF_INET, SOCK_STREAM)
-sock.connect(('5.tcp.eu.ngrok.io', 16932))
+sock.connect(('localhost', 8080))
 my_data = list(map(int, sock.recv(64).decode().strip().split(',')))
 my_id = my_data[0]
 my_player = my_data[1:]
@@ -69,11 +69,16 @@ class Eat:
     def check_collision(self, px, py, pr):
         return hypot(self.x - px, self.y - py) <= self.radius + pr
 
-eats = [
-    Eat(randint(-2000, 2000), randint(-2000, 2000), 10,
-        (randint(0,255), randint(0,255), randint(0,255)))
-    for _ in range(300)
-]
+def spawn_eat():
+    return Eat(
+        randint(-2000, 2000),
+        randint(-2000, 2000),
+        10,
+        (randint(0,255), randint(0,255), randint(0,255))
+    )
+
+MAX_EATS = 300
+eats = [spawn_eat() for _ in range(MAX_EATS)]
 
 # ================== MENU ==================
 def draw_menu():
@@ -141,6 +146,7 @@ while running:
 
     for eat in to_remove:
         eats.remove(eat)
+        eats.append(spawn_eat())
 
     if lose:
         t = f.render('U lose!', True, (244, 0, 0))
